@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thiệp mời Lễ Tốt Nghiệp - Phương Liên</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f7f5ef;
+            font-family: 'Montserrat', sans-serif;
+            color: #333;
+            background-image: linear-gradient(90deg, transparent 95%, rgba(0,0,0,0.03) 100%);
+            background-size: 50px 100%;
+        }
+
+        /* --- PHẦN MÀN HÌNH MỞ ĐẦU (ENVELOPE) --- */
+        #envelope-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100vh;
+            background-color: #f7f5ef;
+            background-image: linear-gradient(90deg, transparent 95%, rgba(0,0,0,0.03) 100%);
+            background-size: 50px 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 0.8s ease;
+        }
+
+        .envelope-wrapper { cursor: pointer; text-align: center; }
+
+        .envelope {
+            width: 240px; height: 150px;
+            background-color: #1a1a1a;
+            position: relative;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .envelope::after {
+            content: ''; position: absolute;
+            top: 0; left: 0;
+            width: 0; height: 0;
+            border-left: 120px solid transparent;
+            border-right: 120px solid transparent;
+            border-top: 80px solid #2a2a2a;
+        }
+
+        .stamp {
+            position: absolute; top: 15px; right: 15px;
+            background: white; padding: 5px 8px;
+            font-size: 10px; font-family: 'Playfair Display', serif;
+            text-align: center; z-index: 10;
+            border-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .tap-text { font-size: 12px; letter-spacing: 3px; color: #888; }
+
+        /* --- PHẦN NỘI DUNG CHÍNH --- */
+        #main-content {
+            display: none;
+            padding-bottom: 50px;
+        }
+
+        .center-wrapper { display: flex; flex-direction: column; align-items: center; }
+
+        .container {
+            width: 100%; max-width: 450px;
+            background-color: #fdfbf7;
+            padding: 50px 20px; margin-top: 30px;
+            box-sizing: border-box; text-align: center;
+            border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            overflow: hidden;
+        }
+
+        .pre-title { font-size: 12px; letter-spacing: 4px; text-transform: uppercase; color: #a68a56; margin-bottom: 10px; }
+        .title { font-family: 'Playfair Display', serif; font-size: 44px; font-weight: 700; font-style: italic; margin: 0 0 40px 0; }
+        
+        /* Hiệu ứng ảnh Polaroid */
+        .photo-gallery { position: relative; height: 220px; margin-bottom: 50px; }
+        .polaroid { background: white; padding: 10px 10px 30px 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: absolute; width: 140px; }
+        .polaroid img { width: 100%; height: 140px; object-fit: cover; background-color: #ddd; }
+        .polaroid p { margin: 10px 0 0 0; font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #555; }
+        .photo-then { left: 40px; transform: rotate(-8deg); z-index: 1; }
+        .photo-now { right: 40px; top: 20px; transform: rotate(5deg); z-index: 2; }
+        
+        .invitation-text { font-size: 14px; font-style: italic; color: #777; margin-bottom: 20px; line-height: 1.6; }
+        .name { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 700; letter-spacing: 2px; margin-bottom: 20px; }
+        .icon { color: #87ceeb; font-size: 20px; margin-bottom: 20px; }
+        .time-date { font-size: 14px; letter-spacing: 2px; margin-bottom: 20px; line-height: 1.8; }
+        .location { font-size: 13px; color: #888; line-height: 1.6; }
+
+        /* --- PHẦN CHI TIẾT BÊN DƯỚI (THẺ THÔNG TIN) --- */
+        .detail-card {
+            width: 100%; max-width: 450px;
+            background-color: #fdfbf7;
+            padding: 30px; margin-top: 20px;
+            box-sizing: border-box; border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03); text-align: left;
+        }
+
+        .card-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; margin: 0 0 20px 0; }
+        .section-label { font-size: 10px; letter-spacing: 2px; color: #999; text-transform: uppercase; margin-bottom: 8px; margin-top: 20px; }
+        .info-text { font-size: 14px; color: #333; line-height: 1.5; margin: 0; }
+        .map-container { margin-top: 15px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+
+        /* Style cho phần RSVP */
+        .rsvp-input { width: 100%; padding: 15px; margin-top: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px; box-sizing: border-box; background-color: #fff; }
+        .rsvp-buttons { display: flex; gap: 10px; margin-top: 15px; }
+        .rsvp-btn { flex: 1; padding: 12px; border: 1px solid #ddd; background: #fff; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .rsvp-btn:hover { background: #f0f0f0; }
+        .submit-btn { width: 100%; padding: 15px; margin-top: 15px; background-color: #8f8c85; color: white; border: none; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .submit-btn:hover { background-color: #7a7770; }
+    </style>
+</head>
+<body>
+
+    <div id="envelope-screen">
+        <div class="envelope-wrapper" onclick="openInvitation()">
+            <div class="envelope">
+                <div class="stamp">2026<br>Graduate</div>
+            </div>
+            <div class="tap-text">TAP TO OPEN</div>
+        </div>
+    </div>
+
+    <div id="main-content" class="center-wrapper">
+        
+        <div class="container">
+            <div class="pre-title">Look who's</div>
+            <h1 class="title">graduating!</h1>
+
+            <div class="photo-gallery">
+                <div class="polaroid photo-then">
+                    <img src="anh-luc-nho.jpg" alt="Lúc nhỏ">
+                    <p>then</p>
+                </div>
+                <div class="polaroid photo-now">
+                    <img src="anh-bay-gio.jpg" alt="Bây giờ">
+                    <p>now</p>
+                </div>
+            </div>
+
+            <div class="invitation-text">
+                You are invited to the<br>
+                Graduation Ceremony of
+            </div>
+
+            <div class="name">Phương Liên</div>
+
+            <div class="icon">❄️</div>
+
+            <div class="time-date">
+                14:00 - 17:00<br>
+                SUNDAY, JUNE 28TH
+            </div>
+
+            <div class="location">
+                Học viện Báo chí và Tuyên truyền
+            </div>
+        </div>
+
+        <div class="detail-card">
+            <h2 class="card-title">Phương Liên's Graduation</h2>
+            
+            <div class="section-label">DATE & TIME</div>
+            <p class="info-text">Sun 28 Jun<br>14:00 PM +07</p>
+            
+            <div class="section-label">LOCATION</div>
+            <p class="info-text">Học viện Báo chí và Tuyên truyền</p>
+            
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.084196144577!2d105.78018691493264!3d21.02931668599824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab4b3b22b13d%3A0x86da532dd3264e0a!2zSOG7jWMgdmnhu4duIELDoW8gY2jDrSB2w6AgVHV5w6puIHRydXnhu4Fu!5e0!3m2!1svi!2s!4v1684305821034!5m2!1svi!2s" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+
+        <div class="detail-card">
+            <div class="section-label" style="margin-top: 0;">HOST DETAILS</div>
+            <p class="info-text" style="margin-bottom: 8px;">👤 Nguyen Phuong Lien</p>
+            <p class="info-text">📞 +84 96 782 2437</p>
+        </div>
+
+        <div class="detail-card">
+            <div class="section-label" style="margin-top: 0;">RSVP</div>
+            <p class="info-text" style="font-family: 'Playfair Display', serif; font-style: italic;">Will you be attending?</p>
+            
+            <input type="text" id="guest-name" class="rsvp-input" placeholder="Type your full name">
+            
+            <div class="rsvp-buttons">
+                <button id="btn-accept" class="rsvp-btn" onclick="selectStatus('Accepts with pleasure', this)">Accepts with pleasure</button>
+                <button id="btn-decline" class="rsvp-btn" onclick="selectStatus('Declines with regret', this)">Declines with regret</button>
+            </div>
+            
+            <button id="submit-btn" class="submit-btn" onclick="submitRSVP()">Submit RSVP</button>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. CHỨC NĂNG MỞ PHONG BÌ
+        function openInvitation() {
+            var envelope = document.getElementById('envelope-screen');
+            var content = document.getElementById('main-content');
+            envelope.style.opacity = '0';
+            setTimeout(function() {
+                envelope.style.display = 'none';
+                content.style.display = 'flex';
+                window.scrollTo(0, 0);
+            }, 800);
+        }
+
+        // 2. CHỨC NĂNG RSVP GỬI VỀ GOOGLE SHEETS
+        let currentStatus = "";
+
+        function selectStatus(status, btnElement) {
+            currentStatus = status;
+            document.getElementById('btn-accept').style.backgroundColor = '#fff';
+            document.getElementById('btn-decline').style.backgroundColor = '#fff';
+            btnElement.style.backgroundColor = '#e8e6e1';
+        }
+
+        function submitRSVP() {
+            const nameInput = document.getElementById('guest-name').value;
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (!nameInput || !currentStatus) {
+                alert("Bạn vui lòng điền tên và chọn xác nhận tham dự nhé!");
+                return;
+            }
+
+            submitBtn.innerText = "Đang gửi...";
+            submitBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('guestName', nameInput);
+            formData.append('rsvpStatus', currentStatus);
+
+            // ---> BẠN HÃY DÁN ĐƯỜNG LINK APP SCRIPT CỦA BẠN VÀO DƯỚI ĐÂY <---
+            const scriptURL = "https://script.google.com/macros/s/AKfycbxlCWRsSlo_VoHS9V6BvTfjmEkrkq00OpnD4DuirY6hb2dVf4Q4yMjJy81C5QY-_ppccg/exec";
+
+            fetch(scriptURL, { method: 'POST', body: formData })
+                .then(response => {
+                    submitBtn.innerText = "Đã gửi thành công ✔";
+                    submitBtn.style.backgroundColor = "#729c70"; 
+                    alert("Cảm ơn bạn! Phản hồi đã được ghi nhận.");
+                })
+                .catch(error => {
+                    submitBtn.innerText = "Submit RSVP";
+                    submitBtn.disabled = false;
+                    alert("Có lỗi xảy ra, vui lòng thử lại sau.");
+                });
+        }
+    </script>
+</body>
+</html>
