@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thiệp mời Lễ Tốt Nghiệp - Phương Liên</title>
+    <title>Phương Liên's Graduation</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap');
 
@@ -83,13 +83,29 @@
         .pre-title { font-size: 12px; letter-spacing: 4px; text-transform: uppercase; color: #a68a56; margin-bottom: 10px; }
         .title { font-family: 'Playfair Display', serif; font-size: 44px; font-weight: 700; font-style: italic; margin: 0 0 40px 0; }
         
-        /* Hiệu ứng ảnh Polaroid (Bố cục chuẩn không bị xô lệch) */
-        .photo-gallery { display: flex; justify-content: center; align-items: center; margin: 20px 0 45px 0; }
-        .polaroid { background: white; padding: 10px 10px 30px 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 135px; box-sizing: border-box; }
+        /* Hiệu ứng ảnh Polaroid và quầng bóng mờ phía sau */
+        .photo-gallery { position: relative; display: flex; justify-content: center; align-items: center; margin: 20px 0 45px 0; }
+        
+        /* Tạo quầng bóng mờ phía sau lưng ảnh */
+        .photo-gallery::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -40%);
+            width: 220px;
+            height: 180px;
+            background: rgba(0, 0, 0, 0.15);
+            filter: blur(25px);
+            z-index: 0;
+            border-radius: 50%;
+        }
+
+        .polaroid { background: white; padding: 10px 10px 30px 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); width: 135px; box-sizing: border-box; }
         .polaroid img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; background-color: #ddd; object-position: center top; }
         .polaroid p { margin: 10px 0 0 0; font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: #555; }
-        .photo-then { transform: rotate(-5deg); z-index: 1; margin-right: -20px; margin-top: -15px; }
-        .photo-now { transform: rotate(5deg); z-index: 2; margin-top: 15px; }
+        .photo-then { transform: rotate(-5deg); z-index: 1; margin-right: -20px; margin-top: -15px; position: relative; }
+        .photo-now { transform: rotate(5deg); z-index: 2; margin-top: 15px; position: relative; }
         
         .invitation-text { font-size: 14px; font-style: italic; color: #777; margin-bottom: 20px; line-height: 1.6; }
         .name { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 700; letter-spacing: 2px; margin-bottom: 20px; }
